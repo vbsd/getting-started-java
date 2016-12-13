@@ -21,7 +21,7 @@ Copyright 2016 Google Inc.
     <c:out value="${action}" /> book
   </h3>
 
-  <form method="POST" action="${destination}" enctype="multipart/form-data">
+  <form method="POST" action="${destination}">
 
     <div class="form-group">
       <label for="title">Title</label>

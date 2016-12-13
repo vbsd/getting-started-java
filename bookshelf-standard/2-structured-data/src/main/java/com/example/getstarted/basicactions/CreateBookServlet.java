@@ -29,9 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 // [START example]
 @SuppressWarnings("serial")
-// [START annotations]
-@MultipartConfig
-// [END annotations]
 public class CreateBookServlet extends HttpServlet {
 
   // [START setup]
