@@ -11,7 +11,7 @@ Most users can get this running by updating the parameters in `pom.xml`.
 
     mvn clean appengine:run
 
-### Deploying to App Engine Flexible
+### Deploying to App Engine Standard
 
 * Initialize the [Google Cloud SDK]()
 
