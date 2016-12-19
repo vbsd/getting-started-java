@@ -58,16 +58,6 @@
       <url-pattern>/read</url-pattern>
     </servlet-mapping>
     <servlet>
-      <servlet-name>health</servlet-name>
-      <servlet-class>com.example.getstarted.basicactions.HealthServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>health</servlet-name>
-      <url-pattern>/_ah/health</url-pattern>
-      <url-pattern>/_ah/start</url-pattern>
-      <url-pattern>/_ah/stop</url-pattern>
-    </servlet-mapping>
-    <servlet>
       <servlet-name>delete</servlet-name>
       <servlet-class>com.example.getstarted.basicactions.DeleteBookServlet</servlet-class>
     </servlet>
