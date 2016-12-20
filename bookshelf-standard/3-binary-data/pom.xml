@@ -20,7 +20,7 @@ Copyright 2016 Google Inc.
   <packaging>war</packaging>            <!-- REQUIRED -->
 
   <groupId>com.example.standard.gettingstarted</groupId>
-  <artifactId>bookshelf-standard-2</artifactId>    <!-- Name of your project -->
+  <artifactId>bookshelf-standard-3</artifactId>    <!-- Name of your project -->
   <version>1.0-SNAPSHOT</version>       <!-- xx.xx.xx -SNAPSHOT means development -->
 
   <parent> <!-- Only used for testing - NOT REQUIRED -->
@@ -41,7 +41,9 @@ Copyright 2016 Google Inc.
     <sql.instanceName>${projectID}:us-central1:${sql.dbName}</sql.instanceName>
     <sql.userName>root</sql.userName>                         <!-- A reasonable default -->
     <sql.password>myRootPassword1234</sql.password> <!-- -Dsql.password=myRootPassword1234 -->
-    <!-- [END config] -->
+
+    <bookshelf.bucket>${projectID}.appspot.com</bookshelf.bucket> <!-- bucket w/o gs:// -->
+  <!-- [END config] -->
 
     <appengine.maven.plugin>1.0.0</appengine.maven.plugin>
     <jetty.maven.plugin>9.3.8.v20160314</jetty.maven.plugin>
@@ -144,6 +146,11 @@ Copyright 2016 Google Inc.
       <version>1.0.2</version>
     </dependency>
 
+    <dependency>                        <!-- http://commons.apache.org/proper/commons-fileupload/ -->
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.3.2</version>
+    </dependency>
   </dependencies>
 
   <build>

@@ -40,7 +40,7 @@ public class DatastoreDao implements BookDao {
 
   // [START constructor]
   private DatastoreService datastore;
-  private static final String BOOK_KIND = "Book2";
+  private static final String BOOK_KIND = "Book3";
 
   public DatastoreDao() {
     datastore = DatastoreServiceFactory.getDatastoreService(); // Authorized Datastore service
@@ -53,6 +53,7 @@ public class DatastoreDao implements BookDao {
         .description((String)entity.getProperty(Book.DESCRIPTION))
         .id(entity.getKey().getId())
         .publishedDate((String)entity.getProperty(Book.PUBLISHED_DATE))
+        .imageUrl((String)entity.getProperty(Book.IMAGE_URL))
         .title((String)entity.getProperty(Book.TITLE))
         .build();
   }
@@ -65,6 +66,7 @@ public class DatastoreDao implements BookDao {
     incBookEntity.setProperty(Book.DESCRIPTION, book.getDescription());
     incBookEntity.setProperty(Book.PUBLISHED_DATE, book.getPublishedDate());
     incBookEntity.setProperty(Book.TITLE, book.getTitle());
+    incBookEntity.setProperty(Book.IMAGE_URL, book.getImageUrl());
 
     Key bookKey = datastore.put(incBookEntity); // Save the Entity
     return bookKey.getId();                     // The ID of the Key
@@ -90,6 +92,7 @@ public class DatastoreDao implements BookDao {
     entity.setProperty(Book.DESCRIPTION, book.getDescription());
     entity.setProperty(Book.PUBLISHED_DATE, book.getPublishedDate());
     entity.setProperty(Book.TITLE, book.getTitle());
+    entity.setProperty(Book.IMAGE_URL, book.getImageUrl());
 
     datastore.put(entity);                   // Update the Entity
   }

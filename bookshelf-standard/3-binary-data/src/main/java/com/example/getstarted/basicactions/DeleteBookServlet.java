@@ -16,52 +16,30 @@
 package com.example.getstarted.basicactions;
 
 import com.example.getstarted.daos.BookDao;
-import com.example.getstarted.objects.Book;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 // [START example]
 @SuppressWarnings("serial")
-public class CreateBookServlet extends HttpServlet {
+public class DeleteBookServlet extends HttpServlet {
 
-  // [START setup]
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    req.setAttribute("action", "Add");          // Part of the Header in form.jsp
-    req.setAttribute("destination", "create");  // The urlPattern to invoke (this Servlet)
-    req.setAttribute("page", "form");           // Tells base.jsp to include form.jsp
-    req.getRequestDispatcher("/base.jsp").forward(req, resp);
-  }
-  // [END setup]
-
-  // [START formpost]
-  @Override
-  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-      IOException {
-    // [START bookBuilder]
-    Book book = new Book.Builder()
-        .author(req.getParameter("author"))   // form parameter
-        .description(req.getParameter("description"))
-        .publishedDate(req.getParameter("publishedDate"))
-        .title(req.getParameter("title"))
-        .imageUrl(null)
-        .build();
-    // [END bookBuilder]
-
+    Long id = Long.decode(req.getParameter("id"));
     BookDao dao = (BookDao) this.getServletContext().getAttribute("dao");
     try {
-      Long id = dao.createBook(book);
-      resp.sendRedirect("/read?id=" + id.toString());   // read what we just wrote
+      dao.deleteBook(id);
+      resp.sendRedirect("/books");
     } catch (Exception e) {
-      throw new ServletException("Error creating book", e);
+      throw new ServletException("Error deleting book", e);
     }
   }
-  // [END formpost]
 }
 // [END example]

@@ -17,9 +17,18 @@ package com.example.getstarted.basicactions;
 
 import com.example.getstarted.daos.BookDao;
 import com.example.getstarted.objects.Book;
+import com.example.getstarted.util.CloudStorageHelper;
+
+import com.google.common.base.Strings;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 
 import java.io.IOException;
-
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,15 +53,38 @@ public class CreateBookServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
+    // [START storageHelper]
+    assert ServletFileUpload.isMultipartContent(req);
+    CloudStorageHelper storageHelper =
+        (CloudStorageHelper) getServletContext().getAttribute("storageHelper");
+
+    String newImageUrl = null;
+    Map<String, String> params = new HashMap<String, String>();
+    try {
+      FileItemIterator iter = new ServletFileUpload().getItemIterator(req);
+      while (iter.hasNext()) {
+        FileItemStream item = iter.next();
+        if (item.isFormField()) {
+          params.put(item.getFieldName(), Streams.asString(item.openStream()));
+        } else if (!Strings.isNullOrEmpty(item.getName())) {
+          newImageUrl = storageHelper.uploadFile(
+              item, getServletContext().getInitParameter("bookshelf.bucket"));
+        }
+      }
+    } catch (FileUploadException e) {
+      throw new IOException(e);
+    }
+
     // [START bookBuilder]
     Book book = new Book.Builder()
-        .author(req.getParameter("author"))   // form parameter
-        .description(req.getParameter("description"))
-        .publishedDate(req.getParameter("publishedDate"))
-        .title(req.getParameter("title"))
-        .imageUrl(null)
+        .author(params.get("author"))
+        .description(params.get("description"))
+        .publishedDate(params.get("publishedDate"))
+        .title(params.get("title"))
+        .imageUrl(null == newImageUrl ? params.get("imageUrl") : newImageUrl)
         .build();
     // [END bookBuilder]
+    // [END storageHelper]
 
     BookDao dao = (BookDao) this.getServletContext().getAttribute("dao");
     try {

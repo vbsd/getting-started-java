@@ -42,7 +42,7 @@ Copyright 2016 Google Inc.
     <sql.userName>root</sql.userName>                         <!-- A reasonable default -->
     <sql.password>myRootPassword1234</sql.password> <!-- -Dsql.password=myRootPassword1234 -->
 
-    <bookshelf.bucket>${projectID}</bookshelf.bucket> <!-- bucket w/o gs:// -->
+    <bookshelf.bucket>${projectID}.appspot.com</bookshelf.bucket> <!-- bucket w/o gs:// -->
     <!-- [END config] -->
 
     <appengine.maven.plugin>1.0.0</appengine.maven.plugin>
