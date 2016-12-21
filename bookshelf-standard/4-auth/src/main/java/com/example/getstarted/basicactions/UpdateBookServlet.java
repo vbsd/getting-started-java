@@ -58,7 +58,6 @@ public class UpdateBookServlet extends HttpServlet {
       IOException {
     BookDao dao = (BookDao) this.getServletContext().getAttribute("dao");
 
-    // [START storageHelper]
     assert ServletFileUpload.isMultipartContent(req);
     CloudStorageHelper storageHelper =
         (CloudStorageHelper) getServletContext().getAttribute("storageHelper");
@@ -80,19 +79,22 @@ public class UpdateBookServlet extends HttpServlet {
       throw new IOException(e);
     }
 
-    // [START bookBuilder]
-    Book book = new Book.Builder()
-        .author(params.get("author"))
-        .description(params.get("description"))
-        .publishedDate(params.get("publishedDate"))
-        .title(params.get("title"))
-        .imageUrl(null == newImageUrl ? params.get("imageUrl") : newImageUrl)
-        .id(Long.decode(params.get("id")))
-        .build();
-    // [END bookBuilder]
-    // [END storageHelper]
-
     try {
+      Book oldBook = dao.readBook(Long.decode(params.get("id")));
+
+      // [START bookBuilder]
+      Book book = new Book.Builder()
+          .author(params.get("author"))
+          .description(params.get("description"))
+          .publishedDate(params.get("publishedDate"))
+          .title(params.get("title"))
+          .imageUrl(null == newImageUrl ? params.get("imageUrl") : newImageUrl)
+          .id(Long.decode(params.get("id")))
+          .createdBy(oldBook.getCreatedBy())
+          .createdById(oldBook.getCreatedById())
+          .build();
+      // [END bookBuilder]
+
       dao.updateBook(book);
       resp.sendRedirect("/read?id=" + params.get("id"));
     } catch (Exception e) {

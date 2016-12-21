@@ -44,9 +44,7 @@ public class ListBookServlet extends HttpServlet {
   public void init() throws ServletException {
     BookDao dao = null;
 
-    // [START storageHelper]
     CloudStorageHelper storageHelper = new CloudStorageHelper();
-    // [END storageHelper]
 
     // Creates the DAO based on the Context Parameters
     String storageType = this.getServletContext().getInitParameter("bookshelf.storageType");
@@ -70,12 +68,16 @@ public class ListBookServlet extends HttpServlet {
             "Invalid storage type. Check if bookshelf.storageType property is set.");
     }
     this.getServletContext().setAttribute("dao", dao);
-    // [START save_storage]
     this.getServletContext().setAttribute("storageHelper", storageHelper);
     this.getServletContext().setAttribute(
         "isCloudStorageConfigured",  // Hide upload when Cloud Storage is not configured.
         !Strings.isNullOrEmpty(getServletContext().getInitParameter("bookshelf.bucket")));
-    // [END save_storage]
+
+    // [START authConfigured]
+    this.getServletContext().setAttribute(
+        "isAuthConfigured", // Hide login when auth is not configured.
+        !Strings.isNullOrEmpty(getServletContext().getInitParameter("bookshelf.clientID")));
+    // [END authConfigured]
   }
 
   @Override

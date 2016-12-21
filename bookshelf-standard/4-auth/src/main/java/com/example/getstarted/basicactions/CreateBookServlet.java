@@ -36,29 +36,23 @@ import javax.servlet.http.HttpServletResponse;
 
 // [START example]
 @SuppressWarnings("serial")
-public class UpdateBookServlet extends HttpServlet {
+public class CreateBookServlet extends HttpServlet {
+
+  // [START setup]
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    BookDao dao = (BookDao) this.getServletContext().getAttribute("dao");
-    try {
-      Book book = dao.readBook(Long.decode(req.getParameter("id")));
-      req.setAttribute("book", book);
-      req.setAttribute("action", "Edit");
-      req.setAttribute("destination", "update");
-      req.setAttribute("page", "form");
-      req.getRequestDispatcher("/base.jsp").forward(req, resp);
-    } catch (Exception e) {
-      throw new ServletException("Error loading book for editing", e);
-    }
+    req.setAttribute("action", "Add");          // Part of the Header in form.jsp
+    req.setAttribute("destination", "create");  // The urlPattern to invoke (this Servlet)
+    req.setAttribute("page", "form");           // Tells base.jsp to include form.jsp
+    req.getRequestDispatcher("/base.jsp").forward(req, resp);
   }
+  // [END setup]
 
+  // [START formpost]
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
       IOException {
-    BookDao dao = (BookDao) this.getServletContext().getAttribute("dao");
-
-    // [START storageHelper]
     assert ServletFileUpload.isMultipartContent(req);
     CloudStorageHelper storageHelper =
         (CloudStorageHelper) getServletContext().getAttribute("storageHelper");
@@ -80,6 +74,15 @@ public class UpdateBookServlet extends HttpServlet {
       throw new IOException(e);
     }
 
+    // [START createdBy]
+    String createdByString = "";
+    String createdByIdString = "";
+    if (req.getSession().getAttribute("token") != null) { // Does the user have a logged in session?
+      createdByString = (String) req.getSession().getAttribute("userEmail");
+      createdByIdString = (String) req.getSession().getAttribute("userId");
+    }
+    // [END createdBy]
+
     // [START bookBuilder]
     Book book = new Book.Builder()
         .author(params.get("author"))
@@ -87,17 +90,21 @@ public class UpdateBookServlet extends HttpServlet {
         .publishedDate(params.get("publishedDate"))
         .title(params.get("title"))
         .imageUrl(null == newImageUrl ? params.get("imageUrl") : newImageUrl)
-        .id(Long.decode(params.get("id")))
+        // [START auth]
+        .createdBy(createdByString)
+        .createdById(createdByIdString)
+        // [END auth]
         .build();
     // [END bookBuilder]
-    // [END storageHelper]
 
+    BookDao dao = (BookDao) this.getServletContext().getAttribute("dao");
     try {
-      dao.updateBook(book);
-      resp.sendRedirect("/read?id=" + params.get("id"));
+      Long id = dao.createBook(book);
+      resp.sendRedirect("/read?id=" + id.toString());   // read what we just wrote
     } catch (Exception e) {
-      throw new ServletException("Error updating book", e);
+      throw new ServletException("Error creating book", e);
     }
   }
+  // [END formpost]
 }
 // [END example]

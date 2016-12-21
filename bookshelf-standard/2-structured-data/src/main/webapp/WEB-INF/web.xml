@@ -22,7 +22,17 @@
       <filter-class>com.example.getstarted.util.DatastoreSessionFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>DatastoreSessionFilter</filter-name>
+      <filter-name>DatastoreSessionFilter</filter-name>
+      <url-pattern>/</url-pattern>
+      <url-pattern>/books</url-pattern>
+      <url-pattern>/books/mine</url-pattern>
+      <url-pattern>/create</url-pattern>
+      <url-pattern>/delete</url-pattern>
+      <url-pattern>/login</url-pattern>
+      <url-pattern>/logout</url-pattern>
+      <url-pattern>/oauth2callback</url-pattern>
+      <url-pattern>/read</url-pattern>
+      <url-pattern>/update</url-pattern>
     </filter-mapping>
     <servlet>
       <servlet-name>list</servlet-name>

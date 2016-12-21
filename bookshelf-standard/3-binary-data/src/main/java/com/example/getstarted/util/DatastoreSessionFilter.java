@@ -45,7 +45,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,17 +54,6 @@ import java.util.Iterator;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
 // [START init]
-@WebFilter(filterName = "DatastoreSessionFilter",
-    urlPatterns = {"",
-        "/books",
-        "/books/mine",
-        "/create",
-        "/delete",
-        "/login",
-        "/logout",
-        "/oauth2callback",
-        "/read",
-        "/update"})
 public class DatastoreSessionFilter implements Filter {
 
   private static DatastoreService datastore;
