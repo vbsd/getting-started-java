@@ -16,6 +16,10 @@
 
 package com.example.appengine.gettingstartedjava.helloworld;
 
+import com.google.cloud.dataflow.sdk.Pipeline;
+import com.google.cloud.dataflow.sdk.options.PipelineOptions;
+import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -31,8 +35,13 @@ public class HelloServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    PipelineOptionsFactory.register(SomeOptions.class);
+    SomeOptions options = PipelineOptionsFactory.as(SomeOptions.class);
+    Pipeline p = Pipeline.create(options);
     PrintWriter out = resp.getWriter();
     out.println("Hello, world - Flex Servlet");
+  }
+  private interface SomeOptions extends PipelineOptions {
   }
 }
 // [END example]
