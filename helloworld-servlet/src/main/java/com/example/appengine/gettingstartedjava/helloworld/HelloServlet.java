@@ -51,15 +51,15 @@ public class HelloServlet extends HttpServlet {
     // CHANGE 1/3: Your project ID is required in order to run your pipeline on the Google Cloud.
     options.setProject("<project-id>");
     // CHANGE 2/3: Your Google Cloud Storage path is required for staging local files.
-    options.setStagingLocation("gs://<project-id>/test-staging");
+    options.setStagingLocation("gs://<bucket-id>/test-staging");
 
     // Create the Pipeline object with the options we defined above.
     Pipeline p = Pipeline.create(options);
 
     // This job just copies some data from one Google Storage location to another.
     // CHANGE 3/3: Choose your Google Storage input and output location.
-    p.apply(TextIO.Read.from("gs://<project-id>/in/*"))
-            .apply(TextIO.Write.to("gs://<project-id>/out/"));
+    p.apply(TextIO.Read.from("gs://<bucket-id>/in/*"))
+            .apply(TextIO.Write.to("gs://<bucket-id>/out/"));
 
     // Run the pipeline.
     p.run();
