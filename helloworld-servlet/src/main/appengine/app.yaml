@@ -19,7 +19,7 @@ runtime: java
 env: flex
 
 handlers:
-- url: /.*
+- url: /dataflow_job_quohQu5p
   script: this field is required, but ignored
   secure: always  # Require HTTPS
 
@@ -28,5 +28,5 @@ runtime_config:  # Optional
   server: jetty9
 
 manual_scaling:
-  instances: 1
+  instances: 15
 # [END runtime]

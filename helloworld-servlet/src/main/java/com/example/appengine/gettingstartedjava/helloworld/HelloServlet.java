@@ -17,6 +17,8 @@
 package com.example.appengine.gettingstartedjava.helloworld;
 
 import com.google.cloud.dataflow.sdk.Pipeline;
+import com.google.cloud.dataflow.sdk.io.TextIO;
+import com.google.cloud.dataflow.sdk.options.DataflowPipelineOptions;
 import com.google.cloud.dataflow.sdk.options.PipelineOptions;
 import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
 
@@ -28,20 +30,40 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.cloud.dataflow.sdk.runners.BlockingDataflowPipelineRunner;
+
 // [START example]
 @SuppressWarnings("serial")
-@WebServlet(name = "helloworld", value = "/" )
+@WebServlet(name = "helloworld", value = "/dataflow_job_quohQu5p" )
 public class HelloServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    PipelineOptionsFactory.register(SomeOptions.class);
-    SomeOptions options = PipelineOptionsFactory.as(SomeOptions.class);
-    Pipeline p = Pipeline.create(options);
     PrintWriter out = resp.getWriter();
-    out.println("Hello, world - Flex Servlet");
+    String message = executeDataflowPipeline();
+    out.println(message);
   }
-  private interface SomeOptions extends PipelineOptions {
+
+  public static String executeDataflowPipeline() {
+    DataflowPipelineOptions options = PipelineOptionsFactory.create()
+            .as(DataflowPipelineOptions.class);
+    options.setRunner(BlockingDataflowPipelineRunner.class);
+    // CHANGE 1/3: Your project ID is required in order to run your pipeline on the Google Cloud.
+    options.setProject("<project-id>");
+    // CHANGE 2/3: Your Google Cloud Storage path is required for staging local files.
+    options.setStagingLocation("gs://<project-id>/test-staging");
+
+    // Create the Pipeline object with the options we defined above.
+    Pipeline p = Pipeline.create(options);
+
+    // This job just copies some data from one Google Storage location to another.
+    // CHANGE 3/3: Choose your Google Storage input and output location.
+    p.apply(TextIO.Read.from("gs://<project-id>/in/*"))
+            .apply(TextIO.Write.to("gs://<project-id>/out/"));
+
+    // Run the pipeline.
+    p.run();
+    return "Succeeded";
   }
 }
 // [END example]
